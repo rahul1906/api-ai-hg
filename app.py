@@ -19,47 +19,6 @@ from flask import make_response
 # Flask app should start in global layout
 app = Flask(__name__)
 
-string = r"""
-    {
-  "id": "92dd2f9c-5756-4066-a98d-3089fbd67845",
-  "timestamp": "2017-08-16T11:28:06.126Z",
-  "lang": "en",
-  "result": {
-    "source": "agent",
-    "resolvedQuery": "NV",
-    "action": "search_doctors",
-    "actionIncomplete": false,
-    "parameters": {
-      "specialist": "Orthopedic",
-      "state": "NV"
-    },
-    "contexts": [],
-    "metadata": {
-      "intentId": "f54a8cb3-26be-4279-8e2e-6545853f93c3",
-      "webhookUsed": "true",
-      "webhookForSlotFillingUsed": "false",
-      "intentName": "search-doctors"
-    },
-    "fulfillment": {
-      "speech": "these are the doctors that matched your search...",
-      "messages": [
-        {
-          "type": 0,
-          "speech": "these are the doctors that matched your search..."
-        }
-      ]
-    },
-    "score": 1
-  },
-  "status": {
-    "code": 206,
-    "errorType": "partial_content",
-    "errorDetails": "Webhook call failed. Error: Request timeout."
-  },
-  "sessionId": "07c1d1ca-af0b-4fb7-8531-bfabc1b2ec4f"
-}
-
-    """
 
 @app.route('/chat', methods=['GET'])
 def web():    
@@ -70,7 +29,7 @@ def web():
 def webhook():
     
     req = request.get_json(silent=True, force=True)
-    #req = json.loads(req, strict=False)
+    #req = json.loads(string , strict=False)
 
     print("Request:")
     print(json.dumps(req, indent=4))
