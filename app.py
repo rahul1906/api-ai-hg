@@ -70,7 +70,7 @@ def web():
 def webhook():
     
     req = request.get_json(silent=True, force=True)
-    req = json.loads(req, strict=False)
+    #req = json.loads(req, strict=False)
 
     print("Request:")
     print(json.dumps(req, indent=4))
