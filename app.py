@@ -47,14 +47,14 @@ def processRequest(req):
 
 
 def create_namelist(data):
-    l = [{'type':0,'speech':'these are the results that matched your search...'}]
+    l = []
     for i in range(0, len(data['response']['categories'][0]['suggestions'])):
         l.append(data['response']['categories'][0]['suggestions'][i]['value'])
     return l
 
 
 def create_messages(l):
-    l1 = []
+    l1 = [{'type':0,'speech':'these are the results that matched your search...'}]
     for i in l:
         a = {"type":0,
         "speech":i}
