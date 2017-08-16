@@ -30,7 +30,7 @@ def webhook():
     req = json.loads(text, strict=False)
 
     print("Request:")
-    print(json.dumps(req, indent=4))
+    # print(json.dumps(req, indent=4))
 
     res = processRequest(req)
 
@@ -47,7 +47,7 @@ def processRequest(req):
 
 
 def create_namelist(data):
-    l = []
+    l = [{'type':0,'speech':'these are the results that matched your search...'}]
     for i in range(0, len(data['response']['categories'][0]['suggestions'])):
         l.append(data['response']['categories'][0]['suggestions'][i]['value'])
     return l
