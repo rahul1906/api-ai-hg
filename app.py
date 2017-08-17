@@ -66,7 +66,7 @@ def create_messages(js):
       "type" : 1,
       "title" : js['Results'][i]['DemographicInfo']['DisplayName'],
       "subtitle" : js['Results'][i]['DemographicInfo']['DisplayLastName'],
-      "imageUrl" : js['Results'][i]['DemographicInfo']['ImagePaths'][0]['Url'],
+      "imageUrl" : js['Results'][i]['DemographicInfo']['ImagePaths'][1]['Url'],
       "buttons" : [{
         "text" : "visit page" ,
         "postback" : js['Results'][i]['DemographicInfo']['ProviderUrl']
@@ -89,7 +89,7 @@ def create_messages(js):
       "type" : 1,
       "title" : js['Results'][i]['DemographicInfo']['DisplayName'],
       "subtitle" : js['Results'][i]['DemographicInfo']['DisplayLastName'],
-      "imageUrl" : js['Results'][i]['DemographicInfo']['ImagePaths'][0]['Url'],
+      "imageUrl" : js['Results'][i]['DemographicInfo']['ImagePaths'][1]['Url'],
       "buttons" : [{
         "text" : "visit page" ,
         "postback" : js['Results'][i]['DemographicInfo']['ProviderUrl']
