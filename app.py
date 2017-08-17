@@ -48,10 +48,10 @@ def processRequest(req):
     else :
       what = req['result']['parameters']['specialist']
       where = req['result']['parameters']['any']
-      baseurl = "https://pbh-uat.healthgrades.com/api/v4_0/providersearch/v4_0/pbh/search?cID=PBHTEST_007&providerType=None&what="+what+"&where="+where+"&sortBy=Score"
+      baseurl = "https://pbh-uat.healthgrades.com/api/v4_0/providersearch/v4_0/pbh/search?cID=PBHTEST_007&providerType=None&what="+what+"&where="+where+"&sortBy=BestMatch"
       data = get_data(baseurl)
       data = json.loads(data)
-      data = create_namelist(data)
+      # data = create_namelist(data)
       res = create_messages(data)
       return res
 
@@ -59,25 +59,64 @@ def processRequest(req):
 def get_data(baseurl):
   headers = {
     "Accept": "application/json",
-    'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IjZCdFdLZ1g5RDd1ZGowYTJyLWkyZGFiN3dKRSIsImtpZCI6IjZCdFdLZ1g5RDd1ZGowYTJyLWkyZGFiN3dKRSJ9.eyJpc3MiOiJodHRwczovL3BiaC11YXQuaGVhbHRoZ3JhZGVzLmNvbS9hcGkvdjFfMC9zdHMvaWRlbnQiLCJhdWQiOiJodHRwczovL3BiaC11YXQuaGVhbHRoZ3JhZGVzLmNvbS9hcGkvdjFfMC9zdHMvaWRlbnQvcmVzb3VyY2VzIiwiZXhwIjoxNTAyOTY3MjYwLCJuYmYiOjE1MDI5NjM2NjAsImNsaWVudF9pZCI6InBiaC1kZXZlbG9wZXJwb3J0YWwtc3dhZ2dlcmhhcm5lc3MtaW1wbGljaXQtY2xpZW50Iiwic2NvcGUiOiJwYmgucHJvdmlkZXJzZWFyY2gudjRfMCIsInN1YiI6IjgzYmVhOTQ1LWZmZGUtNGYzZC04YzU0LWUwZTBjYWJmNjZjMCIsImF1dGhfdGltZSI6MTUwMjY5MDE1OCwiaWRwIjoiaWRzcnYiLCJQcm92aWRlclNlYXJjaF92NF8wIjoiUGJoX1NlYXJjaF9HZXQiLCJhbXIiOlsicGFzc3dvcmQiXX0.NHABN7NWXeaRjdwRobPLseSb3yzm0ZIAvex9gASEu3rcF-Ro7bscu6zY14pYyD1sYqI2CGG2hlFWy8NOxnwj0aRZ0sN6NeWc_0vOwDVwGhMspvoguVVuOZDhL9PSbwFd0O5ppnhBG_toMo-kqjGG2_tz1xXEyGJcZm-ZvWXN0Rhh1kD3oeDMzpwpj7mQTuhjHj5QDNtb79onPjOSF1qypMo6vIRMimdh1jjN6FozcdZXQwzTeqQw0opK1d6kXrB8SQGIOkGVrJADaW7nuhSm-oxfF6eVo2O8AtvQ0bM6W27lFrK9vKPQgbPxiCsHxkIyNKuRjc0nrcco7D9XWRsfMQ'
+    'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IjZCdFdLZ1g5RDd1ZGowYTJyLWkyZGFiN3dKRSIsImtpZCI6IjZCdFdLZ1g5RDd1ZGowYTJyLWkyZGFiN3dKRSJ9.eyJpc3MiOiJodHRwczovL3BiaC11YXQuaGVhbHRoZ3JhZGVzLmNvbS9hcGkvdjFfMC9zdHMvaWRlbnQiLCJhdWQiOiJodHRwczovL3BiaC11YXQuaGVhbHRoZ3JhZGVzLmNvbS9hcGkvdjFfMC9zdHMvaWRlbnQvcmVzb3VyY2VzIiwiZXhwIjoxNTAyOTczNDIyLCJuYmYiOjE1MDI5Njk4MjIsImNsaWVudF9pZCI6InBiaC1kZXZlbG9wZXJwb3J0YWwtc3dhZ2dlcmhhcm5lc3MtaW1wbGljaXQtY2xpZW50Iiwic2NvcGUiOiJwYmgucHJvdmlkZXJzZWFyY2gudjRfMCIsInN1YiI6IjgzYmVhOTQ1LWZmZGUtNGYzZC04YzU0LWUwZTBjYWJmNjZjMCIsImF1dGhfdGltZSI6MTUwMjY5MDE1OCwiaWRwIjoiaWRzcnYiLCJQcm92aWRlclNlYXJjaF92NF8wIjoiUGJoX1NlYXJjaF9HZXQiLCJhbXIiOlsicGFzc3dvcmQiXX0.PFBIL8lAn-1euaSdibIw7MQyG15IcNRi7-_myl4YgfnBy1UnYriZhfeUlWqLTe6VwhVSlm9gDs9brJ_nkNpXSfHFyPNz0joaCHCtgwD-EcyBgSuwZEqsHb1T9sh3apbntt73OpXI08iOfwc6Fr4y6atmR9kRIpyFssWU8UhLqZtr27SNwgGWFzeCoieQetDI4HqwcUR3fK069HmLVhNIIefCTwJa41IYrTL5P4tUqlkN3CFXHK7ei3UiiuwDjUJSdRN74MW6we9t0D35cYhTq2DWPsqLnG_qjGDmRciBMUz9YNJBBH_Hlj421tort69EK-CjrLkXZPbSOiliNAC9ig'
   }
   response = requests.get(baseurl, headers=headers)
   text = response.text
   return text
 
-def create_namelist(data):
-    l = []
-    for i in range(0, 5):
-        l.append(data['Results'][i]['DemographicInfo']['DisplayName'])
-    return l  
+def create_messages(js):
+  if len(js['Results']) >= 5:
+  for i in range(0, 5):
+    l1 = []
+    a = {
+    "type" : 1,
+    "title" : js['Results'][i]['DemographicInfo']['DisplayName'],
+    "subtitle" : js['Results'][i]['DemographicInfo']['DisplayLastName'],
+    "imageUrl" : js['Results'][i]['DemographicInfo']['ImagePaths'][0]['Url'],
+    "buttons" : [{
+      "text" : "visit page" ,
+      "postback" : js['Results'][i]['DemographicInfo']['ProviderUrl']
+    }]
+    }
+    l1.append(a)
+    return {"messages" : l1}
 
-def create_messages(l):
-    l1 = [{'type':0,'speech':'these are the top 5 results that matched your search...'}]
-    for i in l:
-        a = {"type":0,
-        "speech":i}
-        l1.append(a)
-    return {"messages":l1}
+else :  
+  for i in range(0,len(js['Results'])):
+    # l1 = [{'type':0,'speech':'these are the results that matched your search...'}]
+    # print(js['Results'][i]['DemographicInfo']['DisplayName'])
+    # print(js['Results'][i]['DemographicInfo']['ProviderUrl'])
+    # print(js['Results'][i]['DemographicInfo']['ImagePaths'][0]['Url'])
+    # print(js['Results'][i]['DemographicInfo']['DisplayLastName'])
+    l1 = []
+    a = {
+    "type" : 1,
+    "title" : js['Results'][i]['DemographicInfo']['DisplayName'],
+    "subtitle" : js['Results'][i]['DemographicInfo']['DisplayLastName'],
+    "imageUrl" : js['Results'][i]['DemographicInfo']['ImagePaths'][0]['Url'],
+    "buttons" : [{
+      "text" : "visit page" ,
+      "postback" : js['Results'][i]['DemographicInfo']['ProviderUrl']
+    }]
+    }
+    l1.append(a)
+    return {"messages" : l1}
+
+
+# def create_namelist(data):
+#     l = []
+#     for i in range(0, 5):
+#         l.append(data['Results'][i]['DemographicInfo']['DisplayName'])
+#     return l  
+
+# def create_messages(l):
+#     l1 = [{'type':0,'speech':'these are the results that matched your search...'}]
+#     for i in l:
+#         a = {"type":0,
+#         "speech":i}
+#         l1.append(a)
+#     return {"messages":l1}
 
 # def processRequest(req):
 #     names = create_namelist(req)
