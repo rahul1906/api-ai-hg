@@ -46,8 +46,8 @@ def processRequest(req):
     if req.get("result").get("action") != "search_doctors":
         return {}
     else :
-      what = req['result']['parameters']['specialist']
-      where = req['result']['parameters']['state']
+      what = req['result']['parameters']['any1']
+      where = req['result']['parameters']['any']
       baseurl = "https://pbh-uat.healthgrades.com/api/v4_0/providersearch/v4_0/pbh/search?cID=PBHTEST_007&providerType=None&what="+what+"&where="+where+"&sortBy=Score"
       data = get_data(baseurl)
       data = json.loads(data)
