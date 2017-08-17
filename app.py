@@ -46,7 +46,7 @@ def processRequest(req):
     if req.get("result").get("action") != "search_doctors":
         return {}
     else :
-      what = req['result']['parameters']['any1']
+      what = req['result']['parameters']['specialist']
       where = req['result']['parameters']['any']
       baseurl = "https://pbh-uat.healthgrades.com/api/v4_0/providersearch/v4_0/pbh/search?cID=PBHTEST_007&providerType=None&what="+what+"&where="+where+"&sortBy=Score"
       data = get_data(baseurl)
@@ -59,7 +59,7 @@ def processRequest(req):
 def get_data(baseurl):
   headers = {
     "Accept": "application/json",
-    'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IjZCdFdLZ1g5RDd1ZGowYTJyLWkyZGFiN3dKRSIsImtpZCI6IjZCdFdLZ1g5RDd1ZGowYTJyLWkyZGFiN3dKRSJ9.eyJpc3MiOiJodHRwczovL3BiaC11YXQuaGVhbHRoZ3JhZGVzLmNvbS9hcGkvdjFfMC9zdHMvaWRlbnQiLCJhdWQiOiJodHRwczovL3BiaC11YXQuaGVhbHRoZ3JhZGVzLmNvbS9hcGkvdjFfMC9zdHMvaWRlbnQvcmVzb3VyY2VzIiwiZXhwIjoxNTAyOTU1ODc3LCJuYmYiOjE1MDI5NTIyNzcsImNsaWVudF9pZCI6InBiaC1kZXZlbG9wZXJwb3J0YWwtc3dhZ2dlcmhhcm5lc3MtaW1wbGljaXQtY2xpZW50Iiwic2NvcGUiOiJwYmgucHJvdmlkZXJzZWFyY2gudjRfMCIsInN1YiI6IjgzYmVhOTQ1LWZmZGUtNGYzZC04YzU0LWUwZTBjYWJmNjZjMCIsImF1dGhfdGltZSI6MTUwMjY5MDE1OCwiaWRwIjoiaWRzcnYiLCJQcm92aWRlclNlYXJjaF92NF8wIjoiUGJoX1NlYXJjaF9HZXQiLCJhbXIiOlsicGFzc3dvcmQiXX0.kn0uksCTPJ1tvyH1Bf0-fJxUVo23j6O5leCjxMKatexrLmiYWwnFCNMtxd19GNXm3P1xwZ0-OKjR3qVmRloX8AXw5pOo46ctGnRGIkpUZKR2w1MYfdsD_8kfV-vCAZDriHzRfXqLZNOySJg6QYjrfhH5SENOmZ76kczdPnEUbgedR8X4pQBneCMYWMPZKkFpXYmw44ST0SIPvdVn-3c2qORCQaqALnLx8-0HUKSSCJPuSU6uyf5JtL6UKPyOSTCC1CtSxJ5uIPo9-oPYaV4j8A1CRlxpgSJOY75taOmhvM0TTCdXGXgIoAw4t55rVnrOZAThodkfZI1kQaYOFkGtOA'
+    'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IjZCdFdLZ1g5RDd1ZGowYTJyLWkyZGFiN3dKRSIsImtpZCI6IjZCdFdLZ1g5RDd1ZGowYTJyLWkyZGFiN3dKRSJ9.eyJpc3MiOiJodHRwczovL3BiaC11YXQuaGVhbHRoZ3JhZGVzLmNvbS9hcGkvdjFfMC9zdHMvaWRlbnQiLCJhdWQiOiJodHRwczovL3BiaC11YXQuaGVhbHRoZ3JhZGVzLmNvbS9hcGkvdjFfMC9zdHMvaWRlbnQvcmVzb3VyY2VzIiwiZXhwIjoxNTAyOTY3MjYwLCJuYmYiOjE1MDI5NjM2NjAsImNsaWVudF9pZCI6InBiaC1kZXZlbG9wZXJwb3J0YWwtc3dhZ2dlcmhhcm5lc3MtaW1wbGljaXQtY2xpZW50Iiwic2NvcGUiOiJwYmgucHJvdmlkZXJzZWFyY2gudjRfMCIsInN1YiI6IjgzYmVhOTQ1LWZmZGUtNGYzZC04YzU0LWUwZTBjYWJmNjZjMCIsImF1dGhfdGltZSI6MTUwMjY5MDE1OCwiaWRwIjoiaWRzcnYiLCJQcm92aWRlclNlYXJjaF92NF8wIjoiUGJoX1NlYXJjaF9HZXQiLCJhbXIiOlsicGFzc3dvcmQiXX0.NHABN7NWXeaRjdwRobPLseSb3yzm0ZIAvex9gASEu3rcF-Ro7bscu6zY14pYyD1sYqI2CGG2hlFWy8NOxnwj0aRZ0sN6NeWc_0vOwDVwGhMspvoguVVuOZDhL9PSbwFd0O5ppnhBG_toMo-kqjGG2_tz1xXEyGJcZm-ZvWXN0Rhh1kD3oeDMzpwpj7mQTuhjHj5QDNtb79onPjOSF1qypMo6vIRMimdh1jjN6FozcdZXQwzTeqQw0opK1d6kXrB8SQGIOkGVrJADaW7nuhSm-oxfF6eVo2O8AtvQ0bM6W27lFrK9vKPQgbPxiCsHxkIyNKuRjc0nrcco7D9XWRsfMQ'
   }
   response = requests.get(baseurl, headers=headers)
   text = response.text
