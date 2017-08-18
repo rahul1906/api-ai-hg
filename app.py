@@ -94,12 +94,12 @@ def create_messages(js):
       }
       l1.append(a)
       
-    print({"messages" : l1})
+    #print({"messages" : l1})
     return {"messages" : l1}
 
   else :  
+    l1 = []
     for i in range(0,len(js['Results'])):
-      l1 = []
       # l1 = [{'type':0,'speech':'these are the results that matched your search...'}]
       # print(js['Results'][i]['DemographicInfo']['DisplayName'])
       # print(js['Results'][i]['DemographicInfo']['ProviderUrl'])
@@ -117,7 +117,7 @@ def create_messages(js):
       }
       l1.append(a)
       
-    print({"messages" : l1})  
+    #print({"messages" : l1})  
     return {"messages" : l1}
 
 def get_data(baseurl):
