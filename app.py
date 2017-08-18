@@ -94,7 +94,7 @@ def create_messages(js):
       }
       l1.append(a)
       
-    #print({"messages" : l1})
+    print({"messages" : l1})
     return {"messages" : l1}
 
   else :  
@@ -117,7 +117,7 @@ def create_messages(js):
       }
       l1.append(a)
       
-    #print({"messages" : l1})  
+    print({"messages" : l1})  
     return {"messages" : l1}
 
 def get_data(baseurl):
