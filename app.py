@@ -49,14 +49,33 @@ def processRequest(req):
     else :
       what = req['result']['parameters']['specialist']
       where = req['result']['parameters']['geo-city']
-      baseurl = "https://pbh-uat.healthgrades.com/api/v4_0/providersearch/v4_0/pbh/search?cID=PBHTEST_007&providerType=None&what="+what+"&where="+where+"&sortBy=BestMatch"
-      #baseurl = "https://pbh-uat.healthgrades.com/api/v4_0/providersearch/v4_0/pbh/search?cID=PBHTEST_007&providerType=None&what="+what+"&pt="+str(37.479189)+"%2C%20"+str(-122.165982)+"&sortBy=BestMatch"
+      points = get_coordinates(where)
+      #baseurl = "https://pbh-uat.healthgrades.com/api/v4_0/providersearch/v4_0/pbh/search?cID=PBHTEST_007&providerType=None&what="+what+"&where="+where+"&sortBy=BestMatch"
+      baseurl = "https://pbh-uat.healthgrades.com/api/v4_0/providersearch/v4_0/pbh/search?cID=PBHTEST_007&providerType=None&what="+what+"&pt="+str(points[0])+"%2C%20"+str(points[1])+"&sortBy=BestMatch"
       data = get_data(baseurl)
       data = json.loads(data)
       # data = create_namelist(data)
       # res = create_messages(data)
       res = create_messages(data)
       return res
+
+def get_coordinates(city):
+  url = "http://maps.googleapis.com/maps/api/geocode/json?address="+city+"&sensor=true"
+  text = get_data1(url)
+  js = json.loads(text , strict = False)
+  lat = js['results'][0]['geometry']['location']['lat']
+  lon = js['results'][0]['geometry']['location']['lng']
+  return (lat,lon)
+
+
+def get_data1(baseurl):
+  headers = {
+    "Accept": "application/json",
+  }
+  response = requests.get(baseurl, headers=headers)
+  text = response.text
+  return text
+
 
 def create_messages(js):
 
