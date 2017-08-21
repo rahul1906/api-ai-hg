@@ -65,22 +65,31 @@ def processRequest(req):
         data = get_data(baseurl)
         if data[0] == 0:
           l = []
-          for i in range(0, len(data[1])):
-            l.append({
-                 "content_type": "text",
-                 "title": data[1][i],
-                 "payload": data[1][i]
-              })
-          return {"facebook" :{"text": "These are the multiple results that matched your search, please select one","quick_replies": l}}
-# {
-#   "facebook": {
-#     "text": "please share your location, so we can serve you better",
+          # for i in range(0, len(data[1])):
+          #   l.append({
+          #        "content_type": "text",
+          #        "title": data[1][i],
+          #        "payload": data[1][i]
+          #     })
+          return { "type":2, "title" : "These are the multiple results that matched your search, please select one","replies": data[1]}  
+          # return {"facebook" :{"text": "These are the multiple results that matched your search, please select one","quick_replies": l}}
+
+ # {
+ #    "type": 2,
+ #    "replies": [
+ #      "one",
+ #      "two"
+ #    ]   
+ #  }
 
         elif data[0] == 1:
           # print(data[1])
           res = json.loads(data[1])
           res = create_messages(res)
           return res
+
+        elif data[0] == 2:
+          return data[1]
 
       
       # data = create_namelist(data)
@@ -167,6 +176,13 @@ def get_data(baseurl):
     js = json.loads(response.text , strict = False)
     if js['Message'].find('matched multiple locations') != -1 :
       return (0, js['Message'].split(':', 1)[-1].split(';'))
+    else:
+      return (2, {"messages": [        
+      {
+                  "type": 0,
+                  "speech": "sorry your search didn't match any results :("
+                  }
+      ]})  
 
 
   else :  
