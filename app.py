@@ -65,6 +65,7 @@ def get_coordinates(city):
   js = json.loads(text , strict = False)
   lat = js['results'][0]['geometry']['location']['lat']
   lon = js['results'][0]['geometry']['location']['lng']
+  print(lat , lon)
   return (lat,lon)
 
 
@@ -78,8 +79,17 @@ def get_data1(baseurl):
 
 
 def create_messages(js):
+  
+  if len(js['Results']) == 0:
+    a = {"messages": [        
+    {
+                "type": 0,
+                "speech": "sorry your search didn't match any results :("
+                }
+    ]}
+    return a
 
-  if len(js['Results']) >= 5:
+  elif len(js['Results']) >= 5:
     l1 = []
     for i in range(0, 5):
       a = {
@@ -97,7 +107,7 @@ def create_messages(js):
     print({"messages" : l1})
     return {"messages" : l1}
 
-  else :  
+  elif len(js['Results']) < 5: 
     l1 = []
     for i in range(0,len(js['Results'])):
       # l1 = [{'type':0,'speech':'these are the results that matched your search...'}]
@@ -119,6 +129,16 @@ def create_messages(js):
       
     print({"messages" : l1})  
     return {"messages" : l1}
+
+  else :
+    a = {"messages": [        
+    {
+                "type": 0,
+                "speech": "sorry your search didn't match any results :("
+                }
+    ]}
+    return a
+
 
 def get_data(baseurl):
   headers = {
