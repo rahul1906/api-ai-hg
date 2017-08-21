@@ -45,7 +45,20 @@ def webhook():
 
 def processRequest(req):
     if req.get("result").get("action") != "search_doctors":
-        return {}
+      return {}
+
+    if req['result']['actionIncomplete'] == True and req['result']['parameters']['geo-city'] is None:
+      return {
+                "facebook": {
+                  "text": "please share your location, so we can serve you better",
+                  "quick_replies": [
+                    {
+                      "content_type": "location"
+                    }
+                  ]
+                }
+              }
+ 
     else :
       what = req['result']['parameters']['specialist']
       where = req['result']['parameters']['geo-city']

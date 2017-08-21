@@ -90,7 +90,7 @@ def create_messages(js):
     return a
 
   elif len(js['Results']) >= 5:
-    l1 = []
+    l1 = [{'type':0, 'speech':'These are the results that matched your search'}]
     for i in range(0, 5):
       a = {
       "type" : 1,
@@ -108,7 +108,7 @@ def create_messages(js):
     return {"messages" : l1}
 
   elif len(js['Results']) < 5: 
-    l1 = []
+    l1 = [{'type':0, 'speech':'These are the results that matched your search'}]
     for i in range(0,len(js['Results'])):
       # l1 = [{'type':0,'speech':'these are the results that matched your search...'}]
       # print(js['Results'][i]['DemographicInfo']['DisplayName'])
