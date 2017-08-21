@@ -42,12 +42,7 @@ def webhook():
     r = make_response(res)
     r.headers['Content-Type'] = 'application/json'
     return r
-"messages": [        
-{
-            "type": 0,
-            "speech": "Some text\nNext line"
-            }
-]
+
 def processRequest(req):
     if req.get("result").get("action") != "search_doctors":
         return {}
@@ -62,7 +57,7 @@ def processRequest(req):
           where = req['result']['parameters']['loc_code']
         elif req['result']['parameters']['loc_city'] != "":
           where = req['result']['parameters']['loc_city']
-        else req['result']['parameters']['loc_state'] != "":
+        else : #req['result']['parameters']['loc_state'] != ""
           where = req['result']['parameters']['loc_state']
         
         what = req['result']['parameters']['specialist']
