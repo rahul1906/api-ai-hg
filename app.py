@@ -70,8 +70,8 @@ def processRequest(req):
           for i in range(0, len(data[1])):
             l.append({
                  "content_type": "text",
-                 "title": data[i],
-                 "payload": data[i]
+                 "title": data[1][i],
+                 "payload": data[1][i]
               })
           return {"quick_replies": l}  
 
@@ -164,7 +164,7 @@ def get_data(baseurl):
   response = requests.get(baseurl, headers=headers)
 
   if response.status_code == 400:
-    js = json.loads(text , strict = False)
+    js = json.loads(response.text , strict = False)
     if js['Message'].find('matched multiple locations') != -1 :
       return (0, js['Message'].split(':', 1)[-1].split(';'))
 
