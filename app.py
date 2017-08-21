@@ -43,11 +43,16 @@ def webhook():
     r.headers['Content-Type'] = 'application/json'
     return r
 
+    # print()
+    # print()
+
 def processRequest(req):
+    print(type(req['result']['actionIncomplete']), type(req['result']['parameters']['geo-city']))
     if req.get("result").get("action") != "search_doctors":
       return {}
 
-    if req['result']['actionIncomplete'] == True and req['result']['parameters']['geo-city'] is None:
+    if req['result']['actionIncomplete'] == True and req['result']['parameters']['geo-city'] == "":
+      print('inside if')
       return {
                 "facebook": {
                   "text": "please share your location, so we can serve you better",
@@ -76,6 +81,7 @@ def get_coordinates(city):
   url = "http://maps.googleapis.com/maps/api/geocode/json?address="+city+"&sensor=true"
   text = get_data1(url)
   js = json.loads(text , strict = False)
+  print(js)
   lat = js['results'][0]['geometry']['location']['lat']
   lon = js['results'][0]['geometry']['location']['lng']
   print(lat , lon)
