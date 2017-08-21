@@ -64,23 +64,16 @@ def processRequest(req):
         #baseurl = "https://pbh-uat.healthgrades.com/api/v4_0/providersearch/v4_0/pbh/search?cID=PBHTEST_007&providerType=None&what="+what+"&pt="+str(points[0])+"%2C%20"+str(points[1])+"&sortBy=BestMatch"
         data = get_data(baseurl)
         if data[0] == 0:
-          l = []
+          # l = []
           # for i in range(0, len(data[1])):
           #   l.append({
           #        "content_type": "text",
           #        "title": data[1][i],
           #        "payload": data[1][i]
           #     })
-          return { "type":2 , "replies": data[1]}  
+          return { "messages": [{'title' : "choices", "type" : 2, "replies" : data[1]}]}
+          # return { "type":2 , "replies": data[1]}  
           # return {"facebook" :{"text": "These are the multiple results that matched your search, please select one","quick_replies": l}}
-
- # {
- #    "type": 2,
- #    "replies": [
- #      "one",
- #      "two"
- #    ]   
- #  }
 
         elif data[0] == 1:
           # print(data[1])
@@ -90,6 +83,15 @@ def processRequest(req):
 
         elif data[0] == 2:
           return data[1]
+
+# 'messages': 
+#               [
+#                {'title': 'when',
+#                 'replies': ['12:00',
+#                             '13:00',
+#                             '17:00',
+#                             '18:00'],
+#                 'type': 2}],
 
       
       # data = create_namelist(data)
@@ -168,7 +170,7 @@ def create_messages(js):
 def get_data(baseurl):
   headers = {
     "Accept": "application/json",
-    'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IjZCdFdLZ1g5RDd1ZGowYTJyLWkyZGFiN3dKRSIsImtpZCI6IjZCdFdLZ1g5RDd1ZGowYTJyLWkyZGFiN3dKRSJ9.eyJpc3MiOiJodHRwczovL3BiaC11YXQuaGVhbHRoZ3JhZGVzLmNvbS9hcGkvdjFfMC9zdHMvaWRlbnQiLCJhdWQiOiJodHRwczovL3BiaC11YXQuaGVhbHRoZ3JhZGVzLmNvbS9hcGkvdjFfMC9zdHMvaWRlbnQvcmVzb3VyY2VzIiwiZXhwIjoxNTAzMzMyMjkzLCJuYmYiOjE1MDMzMjg2OTMsImNsaWVudF9pZCI6InBiaC1kZXZlbG9wZXJwb3J0YWwtc3dhZ2dlcmhhcm5lc3MtaW1wbGljaXQtY2xpZW50Iiwic2NvcGUiOiJwYmgucHJvdmlkZXJzZWFyY2gudjRfMCIsInN1YiI6IjgzYmVhOTQ1LWZmZGUtNGYzZC04YzU0LWUwZTBjYWJmNjZjMCIsImF1dGhfdGltZSI6MTUwMjY5MDE1OCwiaWRwIjoiaWRzcnYiLCJQcm92aWRlclNlYXJjaF92NF8wIjoiUGJoX1NlYXJjaF9HZXQiLCJhbXIiOlsicGFzc3dvcmQiXX0.PiajKle2-uAQHdyfIYy7HBdKX7X9isHCQfyU5i22P7pBDMxX-EhIyFrLOTkPPa67MABaOr8o4ht1rzCyomQsrxdOsenM2w5Pymo-kmyBDbW0_-UQ4_Xj0A32jfygtO-WwDqaijuMQ1GIyJwuSc-6_pkD1ls6toBMGHZFEArvqBT4yQnUa3PcQxK_5wF3Q2xqeIo4OrBi9j6E7CoQyaOFEuFL3WyxtA-2yi9M2aXHLkmIPskapfMbDAwsSr2dXtNusptuV8Y9mln1397g8QfE7JmiFk1unog1XaIZm2wWfrcT4OdExQ_PCD8he3amDRadlxrY8Y0kjKQ0ZLzuzKJ5Bg'
+    'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IjZCdFdLZ1g5RDd1ZGowYTJyLWkyZGFiN3dKRSIsImtpZCI6IjZCdFdLZ1g5RDd1ZGowYTJyLWkyZGFiN3dKRSJ9.eyJpc3MiOiJodHRwczovL3BiaC11YXQuaGVhbHRoZ3JhZGVzLmNvbS9hcGkvdjFfMC9zdHMvaWRlbnQiLCJhdWQiOiJodHRwczovL3BiaC11YXQuaGVhbHRoZ3JhZGVzLmNvbS9hcGkvdjFfMC9zdHMvaWRlbnQvcmVzb3VyY2VzIiwiZXhwIjoxNTAzMzM2MDg0LCJuYmYiOjE1MDMzMzI0ODQsImNsaWVudF9pZCI6InBiaC1kZXZlbG9wZXJwb3J0YWwtc3dhZ2dlcmhhcm5lc3MtaW1wbGljaXQtY2xpZW50Iiwic2NvcGUiOiJwYmgucHJvdmlkZXJzZWFyY2gudjRfMCIsInN1YiI6IjgzYmVhOTQ1LWZmZGUtNGYzZC04YzU0LWUwZTBjYWJmNjZjMCIsImF1dGhfdGltZSI6MTUwMjY5MDE1OCwiaWRwIjoiaWRzcnYiLCJQcm92aWRlclNlYXJjaF92NF8wIjoiUGJoX1NlYXJjaF9HZXQiLCJhbXIiOlsicGFzc3dvcmQiXX0.ELrRNKyWIxhtmtkJejzj6wXH_1GqHE7pJlNYUXrFIBzpp4-z9Qktxn_NPq2SEcy8Qfxm3tWnSyYQWxfmD_EC2mBrGtNoTN2awcYzObzaiWeWMM_8Xo81W9eKqwM-o1xnvJkp6ZPpOi_Mq4QldaH2T-MpXwm0fu3cLaHMuR48Exa3RK6nZ7MvJ-OflJ4IBmg5PtSRALg01naa-_nBrhUw08ea22GJlmRuny_8ZSHPNz1_KHGo8N50cS2o9ugHXh9qzPFqeCH-8d1KpOpf2IOq0XsH3tYbAeY4kCLjOWGT7QLDYKCN3OJWi_55Ti_bWlOXiV3j935s6TOb2qDfwTeKrw'
   }
   response = requests.get(baseurl, headers=headers)
 
