@@ -71,7 +71,7 @@ def processRequest(req):
           #        "title": data[1][i],
           #        "payload": data[1][i]
           #     })
-          return { "type":2, "title" : "These are the multiple results that matched your search, please select one","replies": data[1]}  
+          return { "type":2 , "replies": data[1]}  
           # return {"facebook" :{"text": "These are the multiple results that matched your search, please select one","quick_replies": l}}
 
  # {
