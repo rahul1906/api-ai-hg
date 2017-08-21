@@ -42,67 +42,61 @@ def webhook():
     r = make_response(res)
     r.headers['Content-Type'] = 'application/json'
     return r
-
-    # print()
-    # print()
-
+"messages": [        
+{
+            "type": 0,
+            "speech": "Some text\nNext line"
+            }
+]
 def processRequest(req):
-    # print(type(req['result']['actionIncomplete']), type(req['result']['parameters']['geo-city']))
-   
-    # if req['result']['actionIncomplete'] == True and req['result']['parameters']['geo-city'] == "":
-    #   print('inside if')
+    if req.get("result").get("action") != "search_doctors":
+        return {}
+    else :
+      if req['result']['parameters']['loc_city'] == "" and req['result']['parameters']['loc_code'] == "" and req['result']['parameters']['loc_state'] == "" and req['result']['parameters']['loc_address'] == "" :
+        return {"messages" : [ {"type" : 0, "speech" : "please enter location"}]}
+
+      else : 
+        if req['result']['parameters']['loc_address'] != "":
+          where = req['result']['parameters']['loc_address']
+        elif req['result']['parameters']['loc_code'] != "":
+          where = req['result']['parameters']['loc_code']
+        elif req['result']['parameters']['loc_city'] != "":
+          where = req['result']['parameters']['loc_city']
+        else req['result']['parameters']['loc_state'] != "":
+          where = req['result']['parameters']['loc_state']
+        
+        what = req['result']['parameters']['specialist']
+        # where = req['result']['parameters']['geo-city']
+        #baseurl = "https://pbh-uat.healthgrades.com/api/v4_0/providersearch/v4_0/pbh/search?cID=PBHTEST_007&providerType=None&what="+what+"&where="+where+"&sortBy=BestMatch"
+        baseurl = "https://pbh-uat.healthgrades.com/api/v4_0/providersearch/v4_0/pbh/search?cID=PBHTEST_007&providerType=None&what="+what+"&pt="+str(points[0])+"%2C%20"+str(points[1])+"&sortBy=BestMatch"
+        data = get_data(baseurl)
+        if data[0] == 0:
+          l = []
+          for i in range(0, len(data[1])):
+            l.append({
+                 "content_type": "text",
+                 "title": data[i],
+                 "payload": data[i]
+              })
+          return {"quick_replies": l}  
+
+
+        elif data[0] == 1:
+          res = json.loads(data[1])
+          res = create_messages(res)
+          return res
+
       
-    if req.get('result').get('action') == "show_coordinates":
-      points = get_coordinates_fb(req['result']['parameters']['any'])
-      return {"messages":[        
-      {
-                  "type": 0,
-                  "speech": "latitiude : "+points[0]+"longitude : "+points[1]+""
-                  }
-      ] }
- 
-    if req.get("result").get("action") == "search_doctors":
-      
-      what = req['result']['parameters']['specialist']
-      where = req['result']['parameters']['geo-city']
-      points = get_coordinates_google(where)
-      #baseurl = "https://pbh-uat.healthgrades.com/api/v4_0/providersearch/v4_0/pbh/search?cID=PBHTEST_007&providerType=None&what="+what+"&where="+where+"&sortBy=BestMatch"
-      baseurl = "https://pbh-uat.healthgrades.com/api/v4_0/providersearch/v4_0/pbh/search?cID=PBHTEST_007&providerType=None&what="+what+"&pt="+str(points[0])+"%2C%20"+str(points[1])+"&sortBy=BestMatch"
-      data = get_data(baseurl)
-      data = json.loads(data)
       # data = create_namelist(data)
       # res = create_messages(data)
-      res = create_messages(data)
-      return res
-    
-    else : 
-      return {}
-
-def get_coordinates_fb(res):
-  lat = js['entry'][0]['messaging'][0]['message']['attachments'][0]['payload']['coordinates']['lat']
-  lon = js['entry'][0]['messaging'][0]['message']['attachments'][0]['payload']['coordinates']['long']
-  return (lat, lon)
-
-
-def get_coordinates_google(city):
-  url = "http://maps.googleapis.com/maps/api/geocode/json?address="+city+"&sensor=true"
-  text = get_data1(url)
-  js = json.loads(text , strict = False)
-  print(js)
-  lat = js['results'][0]['geometry']['location']['lat']
-  lon = js['results'][0]['geometry']['location']['lng']
-  print(lat , lon)
-  return (lat,lon)
-
-
-def get_data1(baseurl):
-  headers = {
-    "Accept": "application/json",
-  }
-  response = requests.get(baseurl, headers=headers)
-  text = response.text
-  return text
-
+      
+# "quick_replies":[
+#       {
+#         "content_type":"text",
+#         "title":"Red",
+#         "payload":"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
+#       }
+#     ]
 
 def create_messages(js):
   
@@ -169,11 +163,19 @@ def create_messages(js):
 def get_data(baseurl):
   headers = {
     "Accept": "application/json",
-    'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IjZCdFdLZ1g5RDd1ZGowYTJyLWkyZGFiN3dKRSIsImtpZCI6IjZCdFdLZ1g5RDd1ZGowYTJyLWkyZGFiN3dKRSJ9.eyJpc3MiOiJodHRwczovL3BiaC11YXQuaGVhbHRoZ3JhZGVzLmNvbS9hcGkvdjFfMC9zdHMvaWRlbnQiLCJhdWQiOiJodHRwczovL3BiaC11YXQuaGVhbHRoZ3JhZGVzLmNvbS9hcGkvdjFfMC9zdHMvaWRlbnQvcmVzb3VyY2VzIiwiZXhwIjoxNTAzMzAxNzU4LCJuYmYiOjE1MDMyOTgxNTgsImNsaWVudF9pZCI6InBiaC1kZXZlbG9wZXJwb3J0YWwtc3dhZ2dlcmhhcm5lc3MtaW1wbGljaXQtY2xpZW50Iiwic2NvcGUiOiJwYmgucHJvdmlkZXJzZWFyY2gudjRfMCIsInN1YiI6IjgzYmVhOTQ1LWZmZGUtNGYzZC04YzU0LWUwZTBjYWJmNjZjMCIsImF1dGhfdGltZSI6MTUwMjY5MDE1OCwiaWRwIjoiaWRzcnYiLCJQcm92aWRlclNlYXJjaF92NF8wIjoiUGJoX1NlYXJjaF9HZXQiLCJhbXIiOlsicGFzc3dvcmQiXX0.NpgG1Tf0c1Z_hm3VPmE1PM34xcCDiq--Ry665iq1J_xqZHoWz_D30i0Omr2tPFV-7BNJAuIBdV1M5rjXolPuz5V4pT25_fqmBnKDQ1bDbnEPu68nztRDaguPmWGLTkMAwkVuwPpwsBu18h9bOLAMB5h8W7tfMXXgeGXZSPOtUqqlTc_FFvJi9PN0B5OsI9J-wm_CpHEgmqkioHmHOPyWlAhyvHma6zh_cbMCNhtNOH0Fr4HJFsxEJexAr3mkGACXokSMbR6FElq9S6YF1enui8jRYt5c5nWmC_hqn6oxcoAvgtFncv_lQTHxok-bnjXeKpKa0DBoUCXUuI_QNE_mrQ'
+    'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IjZCdFdLZ1g5RDd1ZGowYTJyLWkyZGFiN3dKRSIsImtpZCI6IjZCdFdLZ1g5RDd1ZGowYTJyLWkyZGFiN3dKRSJ9.eyJpc3MiOiJodHRwczovL3BiaC11YXQuaGVhbHRoZ3JhZGVzLmNvbS9hcGkvdjFfMC9zdHMvaWRlbnQiLCJhdWQiOiJodHRwczovL3BiaC11YXQuaGVhbHRoZ3JhZGVzLmNvbS9hcGkvdjFfMC9zdHMvaWRlbnQvcmVzb3VyY2VzIiwiZXhwIjoxNTAzMjk3MjEyLCJuYmYiOjE1MDMyOTM2MTIsImNsaWVudF9pZCI6InBiaC1kZXZlbG9wZXJwb3J0YWwtc3dhZ2dlcmhhcm5lc3MtaW1wbGljaXQtY2xpZW50Iiwic2NvcGUiOiJwYmgucHJvdmlkZXJzZWFyY2gudjRfMCIsInN1YiI6IjgzYmVhOTQ1LWZmZGUtNGYzZC04YzU0LWUwZTBjYWJmNjZjMCIsImF1dGhfdGltZSI6MTUwMjY5MDE1OCwiaWRwIjoiaWRzcnYiLCJQcm92aWRlclNlYXJjaF92NF8wIjoiUGJoX1NlYXJjaF9HZXQiLCJhbXIiOlsicGFzc3dvcmQiXX0.S4lDqmN7HTbVfii4Ro0fCPqjytUrviFZkjQ8f6YsCpWqrLXJsFzM8NTereiV7Uta6_gfBm9eW30uTzL12ILrF5Zds2_I3xmzh0pb7WUcWUgOLetJ5OtN7bH1ujLtjTfi9DSs4QPlyRovYYjJjEL8Djpto-6RfIx25JoM4G55efGsDB4qpUBwoA6Iyxik7ibYd6zJxoZvcxGppgq0bOqzNFBwSXMSzxvA4nEoDyutKrnOFF22Q9b3CLX2A5mjz-5miKyOn-EM6H7wWaP13DpDybAPXztzHORwpBLDl8W6FEEZuVXkfbgPkC8ONOuzYsYXtI5y8bekGzeEc7J1leG4iQ'
   }
   response = requests.get(baseurl, headers=headers)
-  text = response.text
-  return text
+
+  if response.status_code == 400:
+    js = json.loads(text , strict = False)
+    if js['Message'].find('matched multiple locations') != -1 :
+      return (0, js['Message'].split(':', 1)[-1].split(';'))
+
+
+  else :  
+    text = response.text
+    return (1, text)
 
 # def create_namelist(data):
 #     l = []
