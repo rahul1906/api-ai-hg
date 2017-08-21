@@ -47,27 +47,25 @@ def webhook():
     # print()
 
 def processRequest(req):
-    print(type(req['result']['actionIncomplete']), type(req['result']['parameters']['geo-city']))
-    if req.get("result").get("action") != "search_doctors":
-      return {}
-
-    if req['result']['actionIncomplete'] == True and req['result']['parameters']['geo-city'] == "":
-      print('inside if')
-      return {
-                "facebook": {
-                  "text": "please share your location, so we can serve you better",
-                  "quick_replies": [
-                    {
-                      "content_type": "location"
-                    }
-                  ]
-                }
-              }
+    # print(type(req['result']['actionIncomplete']), type(req['result']['parameters']['geo-city']))
+   
+    # if req['result']['actionIncomplete'] == True and req['result']['parameters']['geo-city'] == "":
+    #   print('inside if')
+      
+    if req.get('result').get('action') == "show_coordinates":
+      points = get_coordinates_fb(req['result']['parameters']['any'])
+      return {"messages":[        
+      {
+                  "type": 0,
+                  "speech": "latitiude : "+points[0]+"longitude : "+points[1]+""
+                  }
+      ] }
  
-    else :
+    if req.get("result").get("action") == "search_doctors":
+      
       what = req['result']['parameters']['specialist']
       where = req['result']['parameters']['geo-city']
-      points = get_coordinates(where)
+      points = get_coordinates_google(where)
       #baseurl = "https://pbh-uat.healthgrades.com/api/v4_0/providersearch/v4_0/pbh/search?cID=PBHTEST_007&providerType=None&what="+what+"&where="+where+"&sortBy=BestMatch"
       baseurl = "https://pbh-uat.healthgrades.com/api/v4_0/providersearch/v4_0/pbh/search?cID=PBHTEST_007&providerType=None&what="+what+"&pt="+str(points[0])+"%2C%20"+str(points[1])+"&sortBy=BestMatch"
       data = get_data(baseurl)
@@ -76,8 +74,17 @@ def processRequest(req):
       # res = create_messages(data)
       res = create_messages(data)
       return res
+    
+    else : 
+      return {}
 
-def get_coordinates(city):
+def get_coordinates_fb(res):
+  lat = js['entry'][0]['messaging'][0]['message']['attachments'][0]['payload']['coordinates']['lat']
+  lon = js['entry'][0]['messaging'][0]['message']['attachments'][0]['payload']['coordinates']['long']
+  return (lat, lon)
+
+
+def get_coordinates_google(city):
   url = "http://maps.googleapis.com/maps/api/geocode/json?address="+city+"&sensor=true"
   text = get_data1(url)
   js = json.loads(text , strict = False)
