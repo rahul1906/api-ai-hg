@@ -73,8 +73,10 @@ def processRequest(req):
                  "title": data[1][i],
                  "payload": data[1][i]
               })
-          return {"quick_replies": l}  
-
+          return {"facebook" :{"text": "These are the multiple results that matched your search, please select one","quick_replies": l}}
+# {
+#   "facebook": {
+#     "text": "please share your location, so we can serve you better",
 
         elif data[0] == 1:
           # print(data[1])
