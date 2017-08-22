@@ -48,7 +48,7 @@ def processRequest(req):
         return {}
     else :
       if req['result']['parameters']['loc_city'] == "" and req['result']['parameters']['loc_code'] == "" and req['result']['parameters']['loc_state'] == "" and req['result']['parameters']['loc_address'] == "":
-        return {"messages" : [ {"type" : 0, "speech" : "please enter your location, try entering cities, zipcodes or countries"}]}
+        return {"messages" : [ {"type" : 0, "speech" : "please enter your location, try entering city/zipcode or state"}]}
 
       else :
         if  req['result']['parameters']['loc_address'] != "":
@@ -109,7 +109,7 @@ def processRequest(req):
 
 def create_messages(js):
   
-  if len(js['Results']) == 0:
+  if len(js['Results']) or  == 0:
     a = {"messages": [        
     {
                 "type": 0,
@@ -171,7 +171,7 @@ def create_messages(js):
 def get_data(baseurl):
   headers = {
     "Accept": "application/json",
-    'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IjZCdFdLZ1g5RDd1ZGowYTJyLWkyZGFiN3dKRSIsImtpZCI6IjZCdFdLZ1g5RDd1ZGowYTJyLWkyZGFiN3dKRSJ9.eyJpc3MiOiJodHRwczovL3BiaC11YXQuaGVhbHRoZ3JhZGVzLmNvbS9hcGkvdjFfMC9zdHMvaWRlbnQiLCJhdWQiOiJodHRwczovL3BiaC11YXQuaGVhbHRoZ3JhZGVzLmNvbS9hcGkvdjFfMC9zdHMvaWRlbnQvcmVzb3VyY2VzIiwiZXhwIjoxNTAzMzg2MzYzLCJuYmYiOjE1MDMzODI3NjMsImNsaWVudF9pZCI6InBiaC1kZXZlbG9wZXJwb3J0YWwtc3dhZ2dlcmhhcm5lc3MtaW1wbGljaXQtY2xpZW50Iiwic2NvcGUiOiJwYmgucHJvdmlkZXJzZWFyY2gudjRfMCIsInN1YiI6IjgzYmVhOTQ1LWZmZGUtNGYzZC04YzU0LWUwZTBjYWJmNjZjMCIsImF1dGhfdGltZSI6MTUwMjY5MDE1OCwiaWRwIjoiaWRzcnYiLCJQcm92aWRlclNlYXJjaF92NF8wIjoiUGJoX1NlYXJjaF9HZXQiLCJhbXIiOlsicGFzc3dvcmQiXX0.U3Ib3A3wjsnCxuz4e_p751wRDYLx2ePN_bmbEMpShkt1V-qkHE9mtNeY2rfD8fGeSeRCdmoAXbtZf8TISRtvfzJwc_E3XPiWqKPDwhOamhbR6UkgEfP6JflJIJc_rLVL4dVBXew3APxCNmq-x0vr9BTW0o0Mvsul_XJXeVRjjG5ap8NWANllUnxXhztE2UKqPsbRcNM8M5Hxg9YIqxE1iaYlKhHDQlPjv1AjEzIDvHl1y0HanOKwlX2EWGjrgJb1TWwmCBNCbcajBZ8aD7Ww8RdCLWY4U5FEeY70mXwS0sgFoqKbGBr6DCOp_rkCkcXsywg2YPRw5friVld9XSePrA'
+    'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IjZCdFdLZ1g5RDd1ZGowYTJyLWkyZGFiN3dKRSIsImtpZCI6IjZCdFdLZ1g5RDd1ZGowYTJyLWkyZGFiN3dKRSJ9.eyJpc3MiOiJodHRwczovL3BiaC11YXQuaGVhbHRoZ3JhZGVzLmNvbS9hcGkvdjFfMC9zdHMvaWRlbnQiLCJhdWQiOiJodHRwczovL3BiaC11YXQuaGVhbHRoZ3JhZGVzLmNvbS9hcGkvdjFfMC9zdHMvaWRlbnQvcmVzb3VyY2VzIiwiZXhwIjoxNTAzMzkwMTcwLCJuYmYiOjE1MDMzODY1NzAsImNsaWVudF9pZCI6InBiaC1kZXZlbG9wZXJwb3J0YWwtc3dhZ2dlcmhhcm5lc3MtaW1wbGljaXQtY2xpZW50Iiwic2NvcGUiOiJwYmgucHJvdmlkZXJzZWFyY2gudjRfMCIsInN1YiI6IjgzYmVhOTQ1LWZmZGUtNGYzZC04YzU0LWUwZTBjYWJmNjZjMCIsImF1dGhfdGltZSI6MTUwMjY5MDE1OCwiaWRwIjoiaWRzcnYiLCJQcm92aWRlclNlYXJjaF92NF8wIjoiUGJoX1NlYXJjaF9HZXQiLCJhbXIiOlsicGFzc3dvcmQiXX0.clglSNTmlEzoCQ_kOBujArDhB-Bn7mzsr-Ri25_YT6x70oJ-RyNgGbOqLmdwKqM427j6H69rN9u5FV9wcHO7BJpOFu9bforz7khCoy3MENZrItofQrjG6qLGLEFcwK4nEvVtaFgQ6AJpPTwiUxBMcxCYjVCmZdE7g-q9Lz8aEx3OUC4EaTmAdubk5VKTk5Edy7WQ5Rnga0ZxnuThlhd1kVXLwC4V7sLlGLEaO8SMdXctbt0wVhq0QFbZzbEJeCa1xHDXWPEwplAlBkI9eUHcq9ivBQSkgMTkVyqe5U6jmy6iWeC6xBXv5qDRi6-wb9AmXnfl9YaVKU0SV5gTfkTNvg'
   }
   response = requests.get(baseurl, headers=headers)
 
