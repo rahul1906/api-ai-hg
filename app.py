@@ -47,11 +47,13 @@ def processRequest(req):
     if req.get("result").get("action") != "search_doctors":
         return {}
     else :
-      if req['result']['parameters']['loc_city'] == "" and req['result']['parameters']['loc_code'] == "" and req['result']['parameters']['loc_state'] == "" :
+      if req['result']['parameters']['loc_city'] == "" and req['result']['parameters']['loc_code'] == "" and req['result']['parameters']['loc_state'] == "" and req['result']['parameters']['loc_address'] == "":
         return {"messages" : [ {"type" : 0, "speech" : "please enter location"}]}
 
-      else : 
-        if req['result']['parameters']['loc_code'] != "":
+      else :
+        if  req['result']['parameters']['loc_address'] != "":
+          where = req['result']['parameters']['loc_address']
+        elif req['result']['parameters']['loc_code'] != "":
           where = req['result']['parameters']['loc_code']
         elif req['result']['parameters']['loc_city'] != "":
           where = req['result']['parameters']['loc_city']
@@ -137,7 +139,6 @@ def create_messages(js):
   elif len(js['Results']) < 5: 
     l1 = [{'type':0, 'speech':'These are the results that matched your search'}]
     for i in range(0,len(js['Results'])):
-      # l1 = [{'type':0,'speech':'these are the results that matched your search...'}]
       # print(js['Results'][i]['DemographicInfo']['DisplayName'])
       # print(js['Results'][i]['DemographicInfo']['ProviderUrl'])
       # print(js['Results'][i]['DemographicInfo']['ImagePaths'][0]['Url'])
@@ -170,7 +171,7 @@ def create_messages(js):
 def get_data(baseurl):
   headers = {
     "Accept": "application/json",
-    'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IjZCdFdLZ1g5RDd1ZGowYTJyLWkyZGFiN3dKRSIsImtpZCI6IjZCdFdLZ1g5RDd1ZGowYTJyLWkyZGFiN3dKRSJ9.eyJpc3MiOiJodHRwczovL3BiaC11YXQuaGVhbHRoZ3JhZGVzLmNvbS9hcGkvdjFfMC9zdHMvaWRlbnQiLCJhdWQiOiJodHRwczovL3BiaC11YXQuaGVhbHRoZ3JhZGVzLmNvbS9hcGkvdjFfMC9zdHMvaWRlbnQvcmVzb3VyY2VzIiwiZXhwIjoxNTAzMzM2MDg0LCJuYmYiOjE1MDMzMzI0ODQsImNsaWVudF9pZCI6InBiaC1kZXZlbG9wZXJwb3J0YWwtc3dhZ2dlcmhhcm5lc3MtaW1wbGljaXQtY2xpZW50Iiwic2NvcGUiOiJwYmgucHJvdmlkZXJzZWFyY2gudjRfMCIsInN1YiI6IjgzYmVhOTQ1LWZmZGUtNGYzZC04YzU0LWUwZTBjYWJmNjZjMCIsImF1dGhfdGltZSI6MTUwMjY5MDE1OCwiaWRwIjoiaWRzcnYiLCJQcm92aWRlclNlYXJjaF92NF8wIjoiUGJoX1NlYXJjaF9HZXQiLCJhbXIiOlsicGFzc3dvcmQiXX0.ELrRNKyWIxhtmtkJejzj6wXH_1GqHE7pJlNYUXrFIBzpp4-z9Qktxn_NPq2SEcy8Qfxm3tWnSyYQWxfmD_EC2mBrGtNoTN2awcYzObzaiWeWMM_8Xo81W9eKqwM-o1xnvJkp6ZPpOi_Mq4QldaH2T-MpXwm0fu3cLaHMuR48Exa3RK6nZ7MvJ-OflJ4IBmg5PtSRALg01naa-_nBrhUw08ea22GJlmRuny_8ZSHPNz1_KHGo8N50cS2o9ugHXh9qzPFqeCH-8d1KpOpf2IOq0XsH3tYbAeY4kCLjOWGT7QLDYKCN3OJWi_55Ti_bWlOXiV3j935s6TOb2qDfwTeKrw'
+    'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IjZCdFdLZ1g5RDd1ZGowYTJyLWkyZGFiN3dKRSIsImtpZCI6IjZCdFdLZ1g5RDd1ZGowYTJyLWkyZGFiN3dKRSJ9.eyJpc3MiOiJodHRwczovL3BiaC11YXQuaGVhbHRoZ3JhZGVzLmNvbS9hcGkvdjFfMC9zdHMvaWRlbnQiLCJhdWQiOiJodHRwczovL3BiaC11YXQuaGVhbHRoZ3JhZGVzLmNvbS9hcGkvdjFfMC9zdHMvaWRlbnQvcmVzb3VyY2VzIiwiZXhwIjoxNTAzMzgyNTUxLCJuYmYiOjE1MDMzNzg5NTEsImNsaWVudF9pZCI6InBiaC1kZXZlbG9wZXJwb3J0YWwtc3dhZ2dlcmhhcm5lc3MtaW1wbGljaXQtY2xpZW50Iiwic2NvcGUiOiJwYmgucHJvdmlkZXJzZWFyY2gudjRfMCIsInN1YiI6IjgzYmVhOTQ1LWZmZGUtNGYzZC04YzU0LWUwZTBjYWJmNjZjMCIsImF1dGhfdGltZSI6MTUwMjY5MDE1OCwiaWRwIjoiaWRzcnYiLCJQcm92aWRlclNlYXJjaF92NF8wIjoiUGJoX1NlYXJjaF9HZXQiLCJhbXIiOlsicGFzc3dvcmQiXX0.AqO-onSjP6MYQfUt3zVolrIuXVLBQ8_Ajb4iA-hBXEkwAvbs2HGNvwBo8y4yCAqRrCvOUxrxYH9Lkk2qmnAnbe6PyX9-PBmPy_RdHCHtV-PkbvYroPof0mHgmKth1_xneRCf-q_uryWEKSQYo4czDAPTu1mEP450HYIbADy3f5pD4kMKJz3TAI1_IxVxY1liSKLfoGwzxtZbWoTKeSSh2hdH8CJiNMnAbtbI4SM3Ii7wG5EQL_5Agr45HBALbM-PCv6oe-jN3YXTvetlchAeHSuO3AUbF4ASGeP_31_ThmWUUtEHTaxmdV2shv4Asrr5sOFYsb32cHgKIQwWzaV4XA'
   }
   response = requests.get(baseurl, headers=headers)
 
