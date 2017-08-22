@@ -48,7 +48,7 @@ def processRequest(req):
         return {}
     else :
       if req['result']['parameters']['loc_city'] == "" and req['result']['parameters']['loc_code'] == "" and req['result']['parameters']['loc_state'] == "" and req['result']['parameters']['loc_address'] == "":
-        return {"messages" : [ {"type" : 0, "speech" : "please enter your location, try entering cities, zipcodes or countries"}]}
+        return {"messages" : [ {"type" : 0, "speech" : "please enter your location, try entering city/zipcode or state"}]}
 
       else :
         if  req['result']['parameters']['loc_address'] != "":
